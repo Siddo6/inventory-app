@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Add Category</h2>
+  <form method="post" action="{% url 'add_category' %}">
+    {% csrf_token %}
+    {{ category_form.as_p }}
+    <button type="submit" name="add_category">Add Category</button>
+  </form>
+
+  <h2>Add Brand</h2>
+  <form method="post" action="{% url 'add_brand' %}">
+    {% csrf_token %}
+    {{ brand_form.as_p }}
+    <button type="submit" name="add_brand">Add Brand</button>
+  </form>
+{% endblock %}

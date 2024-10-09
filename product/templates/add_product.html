@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+
+  .container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    max-width: 600px;
+    height: 600px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2);  /* Transparent white background */
+    backdrop-filter: blur(10px);  /* Blur effect for the glass effect */
+    -webkit-backdrop-filter: blur(10px);  /* For Safari */
+    border-radius: 15px;  /* Rounded corners */
+    border: 1px solid rgba(255, 255, 255, 0.3);  /* Subtle border */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Soft shadow for depth */
+    color: white;  /* Text color */
+    margin: 20px auto;
+    box-sizing: border-box;
+  }
+  
+  
+  .title{
+    text-align: center;
+    color: #062c7e;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 48px;
+  }
+  
+  .form-group{
+    margin-bottom: 24px;
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .form-control{
+    width: 200px;
+    height: 24px;
+    border: none;
+    border-radius: 6px;
+  }
+  
+  .form-control:hover{
+    background-color: rgba(201, 202, 255, 0.5);
+  }
+  
+  label{
+    color: #474554;
+    text-align: left;
+    width: 200px;
+  }
+  
+  .save-button{
+    width: 200px;
+    height: 32px;
+    background-color: #0a4ad8;
+    color: aliceblue;
+  }
+
+  .cancel{
+    width: 200px;
+    height: 32px;
+    background-color: aliceblue;
+    color:#0a4ad8;
+  }
+  
+  .text-danger{
+    color: #c50021;
+    font-size: 12px;
+    text-align: left;
+  }
+
+  .excel-redirect{
+    color: #474554;
+    margin-top: 10px;
+  }
+
+  .link{
+    color: #0a4ad8;
+  }
+  </style>
+<div class="container">
+  <p class="title">ADD PRODUCTS</p>
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- Product Name Field -->
+    <div class="form-group">
+        <label for="id_name">Product Name</label>
+        <input type="text" name="name" id="id_name" class="form-control" value="{{ form.name.value|default_if_none:'' }}">
+    </div>
+
+    <!-- Category Field -->
+    <div class="form-group">
+        <label for="id_category">Category</label>
+        <select name="category" id="id_category" class="form-control">
+            {% for category in form.category.field.queryset %}
+                <option value="{{ category.id }}">{{ category.category_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Brand Field -->
+    <div class="form-group">
+        <label for="id_brand">Brand</label>
+        <select name="brand" id="id_brand" class="form-control">
+            {% for brand in form.brand.field.queryset %}
+                <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Initial Stock Field -->
+    <div class="form-group">
+        <label for="id_initial_stock">Initial Stock</label>
+        <input type="number" name="initial_stock" id="id_initial_stock" class="form-control" value="{{ form.initial_stock.value|default_if_none:0 }}" step="1">
+    </div>
+
+    <!-- Reorder Level Field -->
+    <div class="form-group">
+        <label for="id_reorder_level">Reorder Level</label>
+        <input type="number" name="reorder_level" id="id_reorder_level" class="form-control" value="{{ form.reorder_level.value|default_if_none:0 }}" step="1">
+    </div>
+
+    <!-- Description Field -->
+    <div class="form-group">
+        <label for="id_description">Description</label>
+        <textarea name="description" id="id_description" class="form-control">{{ form.description.value }}</textarea>
+    </div>
+
+    <!-- Is Active Field -->
+    <div class="form-group">
+        <label for="id_is_active">Is Active</label>
+        <input type="checkbox" name="is_active" id="id_is_active" class="form-check-input" {% if form.is_active.value %}checked{% endif %}>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="save-button">Save Product</button>
+    <button class="cancel"><a href="{% url 'dashboard' %}">Cancel</a></button>
+</form>
+
+  <div class="excel-redirect">Or click <a href="{% url 'upload_products' %}" class="link">HERE</a> if you need to upload products from an excel table.</div>
+</div>
+  {% endblock %}

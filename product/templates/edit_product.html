@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+
+  .container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    max-width: 600px;
+    height: 600px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2);  /* Transparent white background */
+    backdrop-filter: blur(10px);  /* Blur effect for the glass effect */
+    -webkit-backdrop-filter: blur(10px);  /* For Safari */
+    border-radius: 15px;  /* Rounded corners */
+    border: 1px solid rgba(255, 255, 255, 0.3);  /* Subtle border */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Soft shadow for depth */
+    color: white;  /* Text color */
+    margin: 20px auto;
+    box-sizing: border-box;
+  }
+  
+  
+  .title{
+    text-align: center;
+    color: #062c7e;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 48px;
+  }
+  
+  .form-group{
+    margin-bottom: 24px;
+  }
+  
+  .form-control{
+    width: 200px;
+    height: 24px;
+    border: none;
+    border-radius: 6px;
+  }
+  
+  .form-control:hover{
+    background-color: rgba(201, 202, 255, 0.5);
+  }
+  
+  label{
+    color: #474554;
+    text-align: left;
+  }
+  
+  .save-button{
+    width: 200px;
+    height: 32px;
+    background-color: #0a4ad8;
+    color: aliceblue;
+  }
+  
+  .text-danger{
+    color: #c50021;
+    font-size: 12px;
+    text-align: left;
+  }
+  </style>
+
+  <h2 class="title">Edit Product: {{ product.name }}</h2>
+
+  <!-- Product Edit Form -->
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="save-button">Save Changes</button>
+    <a href="{% url 'dashboard' %}" class="cancel">Cancel</a>
+  </form>
+
+  {% if error %}
+  <p class="text-danger">{{ error }}</p>
+{% endif %}
+
+{% endblock %}

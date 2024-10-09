@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  max-width: 600px;
+  height: 600px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.2);  /* Transparent white background */
+  backdrop-filter: blur(10px);  /* Blur effect for the glass effect */
+  -webkit-backdrop-filter: blur(10px);  /* For Safari */
+  border-radius: 15px;  /* Rounded corners */
+  border: 1px solid rgba(255, 255, 255, 0.3);  /* Subtle border */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);  /* Soft shadow for depth */
+  color: white;  /* Text color */
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+
+
+.title{
+  text-align: center;
+  color: #062c7e;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 48px;
+}
+
+.form-group{
+  margin-bottom: 24px;
+}
+
+.form-control{
+  width: 200px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+}
+
+.form-control:hover{
+  background-color: rgba(201, 202, 255, 0.5);
+}
+
+label{
+  color: #474554;
+  text-align: left;
+}
+
+.save-button{
+  width: 200px;
+  height: 32px;
+  background-color: #0a4ad8;
+  color: aliceblue;
+}
+
+.text-danger{
+  color: #c50021;
+  font-size: 12px;
+  text-align: left;
+}
+</style>
+<div class="container">
+  <p class="title">ADD HERE SALES/PURCHASES YOU MADE </p>
+<form method="post">
+  {% csrf_token %}
+  
+  <!-- Transaction Type -->
+  <div class="form-group">
+    <label for="id_transaction_type">TRANSACTION TYPE</label><br>
+    <select name="transaction_type" class="form-control" id="id_transaction_type">
+      <option value="sale">Sale</option>
+      <option value="purchase">Purchase</option>
+    </select>
+    {% if form.transaction_type.errors %}
+      <div class="text-danger">
+        {% for error in form.transaction_type.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Product -->
+  <div class="form-group">
+    <label for="id_product">PRODUCT</label><br>
+    <select name="product" class="form-control" id="id_product">
+      {% for product in form.product.field.queryset %}
+        <option value="{{ product.id }}">{{ product.name }}</option>
+      {% endfor %}
+    </select>
+    {% if form.product.errors %}
+      <div class="text-danger">
+        {% for error in form.product.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Quantity -->
+  <div class="form-group">
+    <label for="id_quantity">QUANTITY</label><br>
+    <input type="number" name="quantity" class="form-control" id="id_quantity" value="{{ form.quantity.value|default_if_none:'' }}" step="0.01" required>
+    {% if form.quantity.errors %}
+      <div class="text-danger">
+        {% for error in form.quantity.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Transaction Date -->
+  <div class="form-group">
+    <label for="id_transaction_date">TRANSACTION DATE </label><br>
+    {{ form.transaction_date }}
+    {% if form.transaction_date.errors %}
+      <div class="text-danger">
+        {% for error in form.transaction_date.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Sale-specific fields -->
+  <div id="sale-fields" style="display: none;">
+    <!-- Sale Price -->
+    <div class="form-group">
+      <label for="id_sale_price">SALE PRICE</label><br>
+      <input type="number" name="sale_price" class="form-control" id="id_sale_price" value="{{ form.sale_price.value|default_if_none:'' }}" step="0.01">
+      {% if form.sale_price.errors %}
+        <div class="text-danger">
+          {% for error in form.sale_price.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Discount -->
+    <div class="form-group">
+      <label for="id_discount">DISCOUNT</label><br>
+      <input type="number" name="discount" class="form-control" id="id_discount" value="{{ form.discount.value|default_if_none:'0' }}" step="0.01">
+      {% if form.discount.errors %}
+        <div class="text-danger">
+          {% for error in form.discount.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Purchase-specific fields -->
+  <div id="purchase-fields" style="display: none;">
+    <!-- Purchase Price -->
+    <div class="form-group">
+      <label for="id_purchase_price">PURCHASE PRICE</label><br>
+      <input type="number" name="purchase_price" class="form-control" id="id_purchase_price" value="{{ form.purchase_price.value|default_if_none:'' }}" step="0.01">
+      {% if form.purchase_price.errors %}
+        <div class="text-danger">
+          {% for error in form.purchase_price.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Supplier -->
+    <div class="form-group">
+      <label for="id_supplier">SUPPLIER</label><br>
+      <select name="supplier" class="form-control" id="id_supplier">
+        <option value="">Select Supplier</option>
+        {% for supplier in form.supplier.field.queryset %}
+          <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.supplier.errors %}
+        <div class="text-danger">
+          {% for error in form.supplier.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="save-button">Save Transaction</button>
+
+</form>
+</div>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sale_rows = document.getElementById('sale-fields');
+    const purchase_rows = document.getElementById('purchase-fields');
+    const transaction_type = document.getElementById('id_transaction_type');
+    
+    // Function to toggle between sale and purchase fields
+    function toggleFields() {
+      if (transaction_type.value === 'sale') {
+        sale_rows.style.display = 'block';
+        purchase_rows.style.display = 'none';
+      } else if (transaction_type.value === 'purchase') {
+        sale_rows.style.display = 'none';
+        purchase_rows.style.display = 'block';
+      }
+    }
+
+    // Run toggleFields when the page loads
+    toggleFields();
+
+    // Run toggleFields when the user changes the transaction type
+    transaction_type.addEventListener('change', toggleFields);
+  });
+</script>
+
+{% endblock %}

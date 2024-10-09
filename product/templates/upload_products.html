@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Upload Products via Excel</h2>
+  <div>Attention: your file should have 4 columns, named Product Name	/Category	/Brand	/Initial stock <br>
+    Product Name should not be empty. Others are optional, if empty Category and Brand is Null while initial stock 0.
+  </div>
+  <!-- File Upload Form -->
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form>
+
+  <!-- Display Existing Products (with Edit Links) -->
+  {% if existing_products %}
+    <h3 class="text-danger">These products already exist in the system:</h3>
+    <ul>
+      {% for product in existing_products %}
+        <li>
+          <strong>{{ product.name }}</strong>
+          (Category: {{ product.category }}, Brand: {{ product.brand }})
+          <!-- Edit button to take user to edit page -->
+          <a href="{{ product.edit_url }}" class="btn btn-sm btn-warning">Edit Product</a>
+        </li>
+      {% endfor %}
+    </ul>
+    <p class="text-warning">You can edit these products by clicking the "Edit Product" button above.</p>
+  {% endif %}
+
+  <!-- Display Newly Added Products -->
+  {% if new_products %}
+    <h3 class="text-success">New Products Added:</h3>
+    <ul>
+      {% for product in new_products %}
+        <li>{{ product }}</li>
+      {% endfor %}
+    </ul>
+    <p class="text-success">These new products have been successfully added to the system.</p>
+  {% endif %}
+
+  <!-- Error Message -->
+  {% if error %}
+    <p class="text-danger">{{ error }}</p>
+  {% endif %}
+  
+{% endblock %}

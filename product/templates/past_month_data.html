@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+
+    html,
+    body {
+        height: 100%;
+    }
+    
+    body {
+        margin: 0;
+        font-family: sans-serif;
+        font-weight: 100;
+    }
+    
+    table {
+        width: 80vw;
+        border-collapse: collapse;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      border-radius: 6px;
+      
+    }
+    
+    th,
+    td {
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.488);
+        color: #424141;
+    }
+    
+    th {
+        text-align: left;
+    }
+    
+    thead {
+        th {
+            background-color:rgba(201, 202, 255, 0.5);
+            color:#3a2528; 
+            
+        }
+    }
+    
+    tbody {
+        tr {
+            &:hover {
+                background-color: rgba(201, 202, 255, 0.5);
+                border: 2px solid #0a4bd8c0;
+                
+            }
+        }
+        td {
+            position: relative;
+            &:hover {
+                &:before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: -9999px;
+                    bottom: -9999px;
+                    background-color: rgba(201, 202, 255, 0.5);
+                    border: 2px solid #0a4bd8c0;
+                    z-index: -1;
+                }
+            }
+        }
+    }
+
+    h2{
+        text-align: center;
+        color: #062c7e;
+        }
+    </style>
+<h2>SUMMARY FOR {{ selected_month }}/{{ selected_year }}</h2>
+
+<table class="table table-striped table-bordered mt-4">
+    <thead>
+        <tr>
+            <th>PRODUCT</th>
+            <th>STARTING STOCK</th>
+            <th>PURCHASE QUANTITY</th>
+            <th>SALE QUANTITY</th>
+            <th>TOTAL COST</th>
+            <th>TOTAL REVENUE</th>
+            <th>ENDING STOCK</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in summary_data %}
+        <tr>
+            <td>{{ item.product__name }}</td>
+            <td>{{ item.starting_stock }}</td>
+            <td>{{ item.total_purchases }}</td>
+            <td>{{ item.total_sales }}</td>
+            <td>{{ item.total_purchase_cost|floatformat:2 }}</td>
+            <td>{{ item.total_sales_revenue|floatformat:2 }}</td>
+            <td>{{ item.ending_stock }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-center">No data available for this month.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

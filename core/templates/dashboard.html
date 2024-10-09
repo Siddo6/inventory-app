@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+        gap: 20px; /* Adds space between grid items */
+        padding: 20px;
+        height: 85vh;
+    }
+
+    .minicontainer1, .minicontainer2, .minicontainer3, .minicontainer4 {
+        background-color: lightblue; /* Just to visually differentiate the containers */
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+    }
+
+    /* Optional: Add responsiveness for even smaller screens */
+    @media (max-width: 600px) {
+        .container {
+            grid-template-columns: 1fr; /* On very small screens, make each minicontainer full width */
+        }
+    }
+.welcome{
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a4ad8;
+    margin-top: 5px;
+}
+</style>
+ <div class="welcome">WELCOME BACK {{user.username|upper}}!</div>
+
+ <div class="container">
+    <div class="minicontainer1">HERE WILL BE A SUMMARY OF SALES AND PURCHASES</div>
+    <div class="minicontainer2">STOCK ALERTS</div>
+    <div class="minicontainer3">RECENT TRANSACTIONS</div>
+    <div class="minicontainer4">SALES TREND(A CHART)</div>
+ </div>
+{% else %}
+ <div>To see this page you should <a href="{% url 'login' %}">Log In</a>.</div>
+{% endif %}
+{% endblock %}
