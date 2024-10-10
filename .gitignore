@@ -12,6 +12,7 @@ __pycache__/
 # Ignore database files
 *.db
 *.gz
+db.sqlite3
 # Ignore sensitive or environment-specific information
 config.ini
 secrets.json
